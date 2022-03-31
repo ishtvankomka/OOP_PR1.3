@@ -4,9 +4,9 @@
 #include "1.3/Fraction.hpp"
 
 TEST_CASE( "Arguments initialized") {
-    long int a1 = 1, b1 = 2;
-    unsigned short int a2 = 3, b2 = 99;
+    string a1 = "1.99";
+    string a2 = "2.2455";
     Fraction testing1;
-    REQUIRE( testing1.toString(a1, a2) == "1.3");
-    REQUIRE( testing1.toString(b1, b2) == "2.99");
+    REQUIRE( testing1.toNumber(a1) == 1.99);
+    REQUIRE( testing1.toNumber(a2) == 2.2455);
 }

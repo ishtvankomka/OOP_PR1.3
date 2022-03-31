@@ -2,83 +2,85 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <cstring>
+#include <cstdlib>
 using namespace std;
-
-void Fraction::Init(long int a1, unsigned short int a2, long int b1, unsigned short int b2)
-{
-        set_first_integer(a1);
-        set_first_fraction(a2);
-        set_second_integer(b1);
-        set_second_fraction(b2);
-}
 
 void Fraction::Read()
 {
-    long int a1, b1;
-    unsigned short int a2, b2;
-    cout << "Set the first integer "; cin >> a1;
-    cout << "Set the first fraction "; cin >> a2;
-    cout << "Set the second integer "; cin >> b1;
-    cout << "Set the second fraction "; cin >> b2;
-    Init(a1, a2, b1, b2);
-    cout << "First number: " << convert(get_first_integer(), get_first_fraction()) << endl;
-    cout << "Second number: " << convert(get_second_integer(), get_second_fraction()) << endl;
+    long int a;
+    unsigned short int b;
+    cout << "Set the integer "; cin >> a;
+    cout << "Set the fraction "; cin >> b;
+
+    Init(a, b);
 }
 
-void Fraction::Display()
+void Fraction::Display() const
 {
-    int botton;
-    do
-    {
-        cout << "MENU:\n1 - +\n2 - *\n3 - EXIT" << endl;
-        cin >> botton;
-        switch(botton)
-        {
-            case 1:
-                cout << "Result of + is " << sum() << endl;
-                break;
-            case 2:
-                cout << "Result of * is " << multiplication() << endl;
-                break;
-            case 3:
-                cout << "Program is terminated" << endl;
-                break;
-        }
-    }
-    while(botton != 3);
+    double a = convertToDouble();
+    cout << a <<  endl;
 }
 
-double Fraction::sum()
+void Fraction::Init(long int a, unsigned short int b)
 {
-    return convert(get_first_integer(), get_first_fraction()) +
-    convert(get_second_integer(), get_second_fraction());
+    set_integer(a);
+    set_fraction(b);
 }
 
-double Fraction::multiplication()
+Fraction toFraction(double n)
 {
-    return convert(get_first_integer(), get_first_fraction()) *
-    convert(get_second_integer(), get_second_fraction());
+    stringstream s;
+    s << n;
+    string str = s.str();
+    string integer_a = strtok(str.data(), ".");
+    string fraction_a = strtok(0, "");
+
+    Fraction nn;
+    long int integer_b;
+    istringstream ( integer_a ) >> integer_b;
+    nn.set_integer(integer_b);
+    
+    unsigned short int fraction_b;
+    istringstream ( fraction_a ) >> fraction_b;
+    nn.set_fraction(fraction_b);
+    
+    return nn;
 }
 
-double Fraction::convert(long int a, unsigned short int b)
+Fraction sum(Fraction a, Fraction b)
 {
-    return toNumber(toString(a, b));
+    double sum =  a.convertToDouble() + b.convertToDouble();
+    return toFraction(sum);
 }
 
-string Fraction::toString(long int a, unsigned short int b)
+Fraction multiplication(Fraction a, Fraction b)
 {
+    double sum =  a.convertToDouble() * b.convertToDouble();
+    return toFraction(sum);
+}
+
+double Fraction::convertToDouble() const
+{
+    return toNumber(toString());
+}
+
+string Fraction::toString() const
+{
+    long int integer = get_integer();
+    unsigned short int fraction = get_fraction();
     stringstream ss1;
-    ss1 << a;
+    ss1 << integer;
     string str1 = ss1.str();
     stringstream ss2;
-    ss2 << b;
+    ss2 << fraction;
     string str2 = ss2.str();
     return str1 + "." + str2;
 }
 
-double Fraction::toNumber(string str)
+double Fraction::toNumber(string str) const
 {
-    double a;
-    istringstream ( str ) >> a;
-    return a;
+    double number;
+    istringstream ( str ) >> number;
+    return number;
 }
